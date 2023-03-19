@@ -1,18 +1,17 @@
 ﻿using Catalog.API.Entities;
 using Catalog.API.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers
 {
-    [Route("api/v1/[controller]")]
-    [ApiConventionType(typeof(DefaultApiConventions))]
+    [Route("/api/v1/[controller]")]
+    //[ApiConventionType(typeof(DefaultApiConventions))]
     [ApiController]
-    public class CatalogController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly IProductRepository _repository;
 
-        public CatalogController(IProductRepository repository)
+        public ProductsController(IProductRepository repository)
         {
             _repository = repository;
         }
