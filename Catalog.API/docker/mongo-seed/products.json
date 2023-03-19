@@ -1,0 +1,8 @@
+{
+    "_id": "1",
+    "name": "tv",
+    "category": "string",
+    "description": "TV LG",
+    "image": "image",
+    "price": 1000
+}

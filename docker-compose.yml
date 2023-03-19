@@ -3,12 +3,38 @@ version: '3.4'
 services:
   catalog.db: 
     image: mongo
+    container_name: catalog.db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
+    container_name: catalog.api
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - "DatabaseSettings:ConnectionString=mongodb://catalog.db:27017"
+    depends_on:
+        - catalog.db
+    ports:
+        - "8000:80"
     build:
-      context: .
-      dockerfile: Catalog.API/Dockerfile
+        context: .
+        dockerfile: Catalog.API/Dockerfile
+
+  mongo-seed:
+    container_name: mongoseed
+    build:
+        context: Catalog.API/docker/mongo-seed
+        dockerfile: Dockerfile
+        args:
+            - DATABASE_URI=mongodb://catalog.db:27017
+            #- USERNAME=$MONGO_INITDB_ROOT_USERNAME
+            #- PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
+    depends_on:
+        - catalog.db
 
 volumes:
   mongo_data:
