@@ -1,1 +1,10 @@
 version: '3.4'
+
+services:
+  catalog.api:
+    environment:
+      - "DatabaseSettings:ConnectionString=mongodb://catalog.db:27017"
+
+  basket.api:
+    environment:
+      - "CacheSettings:ConnectionString=basket.cache:6379"

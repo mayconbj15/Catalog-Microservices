@@ -15,7 +15,6 @@ services:
     container_name: catalog.api
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - "DatabaseSettings:ConnectionString=mongodb://catalog.db:27017"
     depends_on:
         - catalog.db
     ports:
@@ -36,5 +35,28 @@ services:
     depends_on:
         - catalog.db
 
+  basket.cache: 
+    image: redis
+    container_name: basket.cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - cache:/data
+
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    container_name: basket.api
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+        - basket.cache
+    ports:
+        - "8001:80"
+    build:
+        context: .
+        dockerfile: Basket.API/Dockerfile
+
 volumes:
   mongo_data:
+  cache:
