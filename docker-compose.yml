@@ -22,6 +22,7 @@ services:
     build:
         context: .
         dockerfile: Catalog.API/Dockerfile
+    restart: always
 
   mongo-seed:
     container_name: mongoseed
@@ -34,6 +35,13 @@ services:
             #- PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
     depends_on:
         - catalog.db
+   
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/root/.pgadmin
 
   basket.cache: 
     image: redis
@@ -56,7 +64,28 @@ services:
     build:
         context: .
         dockerfile: Basket.API/Dockerfile
+    restart: always
+
+  discount.api:
+    image: ${DOCKER_REGISTRY-}discountapi
+    build:
+      context: .
+      dockerfile: Discount.API/Dockerfile
+    restart: always
+    depends_on:
+        - discount.db
+    ports:
+        - "8002:80"
+  
+  discount.db:
+     image: postgres
+     ports:
+      - "5432:5432"
+     volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   mongo_data:
+  postgres_data:
+  pgadmin_data:
   cache:
