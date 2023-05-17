@@ -12,11 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IDbConnection, NpgsqlConnection>(prov =>
-{
-    var connectionString = builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString");
-    return new NpgsqlConnection(connectionString);
-});
+builder.Services.AddScoped<IDbConnection, NpgsqlConnection>(prov => new NpgsqlConnection(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 var app = builder.Build();
