@@ -27,7 +27,7 @@ public class DiscountService : DiscountProtoService.DiscountProtoServiceBase
 
         if(coupon is null)
         {
-            throw new RpcException(new Status(StatusCode.NotFound, $"Discount with product name {request.ProductName} not found"))
+            throw new RpcException(new Status(StatusCode.NotFound, $"Discount with product name {request.ProductName} not found"));
         }
         
         return _mapper.Map<CouponModel>(coupon);
@@ -51,7 +51,7 @@ public class DiscountService : DiscountProtoService.DiscountProtoServiceBase
         return request.Coupon;
     }
 
-    public async Task<DeleteDiscountResponse> DeleteDiscount(DeleteDiscountRequest request, ServerCallContext context)
+    public override async Task<DeleteDiscountResponse> DeleteDiscount(DeleteDiscountRequest request, ServerCallContext context)
     {
         var deleted = await _repository.DeleteDiscount(request.ProductName);
 
